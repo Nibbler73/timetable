@@ -1,4 +1,7 @@
 <?php
+/**
+ * Rename this file to config.inc.php and adjust the values to your needs
+ */
 
 define('MYSQL_HOST', 'localhost');
 define('MYSQL_USERNAME', 'username');
