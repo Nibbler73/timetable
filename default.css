@@ -1,0 +1,16 @@
+table.db-table 		{
+    border-right:1px solid #ccc;
+    border-bottom:1px solid #ccc;
+    width: 800px;
+}
+table.db-table th, table.db-table tr.intermediate	{
+    background:#eee;
+    padding:5px; border-left:1px solid #ccc;
+    border-top:1px solid #ccc;
+}
+table.db-table td	{
+    padding:5px;
+    border-left:1px solid #ccc;
+    border-top:1px solid #ccc;
+    text-align: center;
+}
