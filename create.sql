@@ -1,4 +1,13 @@
 
+CREATE TABLE `kinder` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `kinder`
+  ADD PRIMARY KEY (`id`);
+ALTER TABLE `kinder`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- Tabellenstruktur für Tabelle `timetable`
 --
@@ -19,3 +28,25 @@ CREATE TABLE `timetable` (
 --
 ALTER TABLE `timetable`
   ADD PRIMARY KEY (`kind_id`,`schuljahr_id`,`stunde`);
+
+ALTER TABLE timetable
+  ADD FOREIGN KEY (kind_id) REFERENCES kinder(id);
+
+
+CREATE TABLE `schuljahre` (
+  `id` int(11) NOT NULL,
+  `description` varchar(255) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+--
+-- Indizes der exportierten Tabellen
+--
+
+--
+-- Indizes für die Tabelle `schuljahre`
+--
+ALTER TABLE `schuljahre`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE timetable
+  ADD FOREIGN KEY (schuljahr_id) REFERENCES schuljahre(id);

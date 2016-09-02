@@ -9,6 +9,18 @@
 /* Load configuration */
 require_once('config.inc.php');
 
+
+/* Parse input */
+$kidId = $_REQUEST['kind'] ?: 1;
+$schuljahr = $_REQUEST['schuljahr'] ?: 20162;
+
+if(! is_numeric($kidId) && !is_null($kidId)) {
+    die('Ungültiges kind');
+}
+if(! is_numeric($schuljahr) && !is_null($schuljahr)) {
+    die('Ungültiges schuljahr');
+}
+
 /* connect to the db */
 $mysqli = mysqli_connect(MYSQL_HOST, MYSQL_USERNAME, MYSQL_PASSWORD, MYSQL_DATABASE);
 if (mysqli_connect_errno()) {
@@ -17,12 +29,37 @@ if (mysqli_connect_errno()) {
 
 $res = mysqli_query($mysqli, "SET NAMES utf8");
 if (!$res) {
-    die( "Failed to run query: (" . $mysqli->errno . ") " . $mysqli->error );
+    die( "Failed enable UTF-8: (" . $mysqli->errno . ") " . $mysqli->error );
 }
 
-$res = mysqli_query($mysqli, "SELECT * FROM ".MYSQL_TABLE." WHERE kind_id=1 AND schuljahr_id=20162");
-if (!$res) {
-    die( "Failed to run query: (" . $mysqli->errno . ") " . $mysqli->error );
+if(is_numeric($schuljahr)) {
+    $res = mysqli_query($mysqli, "SELECT description FROM schuljahre WHERE id=" . $schuljahr);
+    if (!$res) {
+        die("Failed to run query: (" . $mysqli->errno . ") " . $mysqli->error);
+    }
+    $row = mysqli_fetch_assoc($res);
+    $schuljahrDescription = $row['description'];
+} else {
+    die('?!');
+}
+if(is_numeric($kidId)) {
+    $res = mysqli_query($mysqli, "SELECT name FROM kinder WHERE id=" . $kidId);
+    if (!$res) {
+        die("Failed to run query: (" . $mysqli->errno . ") " . $mysqli->error);
+    }
+    $row = mysqli_fetch_assoc($res);
+    $kindName = $row['name'];
+} else {
+    die('?!');
+}
+
+if(is_numeric($kidId) && is_numeric($schuljahr)) {
+    $res = mysqli_query($mysqli, "SELECT * FROM " . MYSQL_TABLE . " WHERE kind_id={$kidId} AND schuljahr_id={$schuljahr}");
+    if (!$res) {
+        die("Failed to run query: (" . $mysqli->errno . ") " . $mysqli->error);
+    }
+} else {
+    die('?!');
 }
 
 header('Content-Type: text/html; charset=utf-8');
@@ -36,7 +73,7 @@ header('Content-Type: text/html; charset=utf-8');
 <body>
 <?php
 
-echo '<h3>Ruri, Schuljahr 2016/2, Klasse 1a</h3>';
+echo "<h3>{$kindName}, {$schuljahrDescription}</h3>";
 
 echo '<table cellpadding="0" cellspacing="0" class="db-table">';
 echo '<thead><tr><th></th><th></th><th>Montag</th><th>Dienstag</th><th>Mittwoch<th>Donnerstag</th><th>Freitag</th></tr></thead><tbody>';
