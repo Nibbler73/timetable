@@ -54,7 +54,7 @@ if(is_numeric($kidId)) {
 }
 
 if(is_numeric($kidId) && is_numeric($schuljahr)) {
-    $res = mysqli_query($mysqli, "SELECT * FROM " . MYSQL_TABLE . " WHERE kind_id={$kidId} AND schuljahr_id={$schuljahr}");
+    $res = mysqli_query($mysqli, "SELECT * FROM " . MYSQL_TABLE . " WHERE kind_id={$kidId} AND schuljahr_id={$schuljahr} ORDER BY stunde ASC");
     if (!$res) {
         die("Failed to run query: (" . $mysqli->errno . ") " . $mysqli->error);
     }
