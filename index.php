@@ -78,7 +78,7 @@ header('Content-Type: text/html; charset=utf-8');
 echo "<h3>{$kindName}, {$schuljahrDescription}</h3>";
 
 echo '<table cellpadding="0" cellspacing="0" class="db-table">';
-echo '<thead><tr><th></th><th></th><th>Montag</th><th>Dienstag</th><th>Mittwoch<th>Donnerstag</th><th>Freitag</th></tr></thead><tbody>';
+echo '<thead><tr><th>&nbsp;</th><th>&nbsp;</th><th>Montag</th><th>Dienstag</th><th>Mittwoch<th>Donnerstag</th><th>Freitag</th></tr></thead><tbody>';
 
 $rowCount=0;
 while($row = mysqli_fetch_assoc($res)) {
@@ -93,7 +93,7 @@ while($row = mysqli_fetch_assoc($res)) {
 
     if(strlen($montag) > 0 && is_null($dienstag) && is_null($mittwoch) && is_null($donnerstag) && is_null($freitag) ) {
         // Nur Montag is definiert, dann wird es eine durchgehende Zeile (z.B. Pause)
-        echo "<tr class='intermediate'><td></td><td>{$stunde}</td><td colspan='5'>{$montag}</td></tr>\n";
+        echo "<tr class='intermediate'><td>&nbsp;</td><td>{$stunde}</td><td colspan='5'>{$montag}</td></tr>\n";
     } else {
         $rowCount++;
         echo "<td>{$rowCount}</td><td>{$stunde}</td><td>{$montag}</td><td>{$dienstag}</td><td>{$mittwoch}</td><td>{$donnerstag}</td><td>{$freitag}</td>\n";
