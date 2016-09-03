@@ -68,6 +68,7 @@ header('Content-Type: text/html; charset=utf-8');
 <html>
 <head>
     <meta name="viewport" content="width=800">
+    <title>Stundenplan - <?php echo $schuljahrDescription; ?></title>
     <link rel="stylesheet" href="default.css">
 </head>
 <body>
