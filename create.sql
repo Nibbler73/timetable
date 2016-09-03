@@ -50,3 +50,15 @@ ALTER TABLE `schuljahre`
 
 ALTER TABLE timetable
   ADD FOREIGN KEY (schuljahr_id) REFERENCES schuljahre(id);
+
+
+
+CREATE TABLE `fussnoten` (
+  `id` int(11) NOT NULL,
+  `note` varchar(255) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `fussnoten`
+  ADD PRIMARY KEY (`id`);
+ALTER TABLE `fussnoten`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

@@ -101,6 +101,15 @@ while($row = mysqli_fetch_assoc($res)) {
 }
 echo '</tbody></table><br />';
 
+// Footnotes
+$res = mysqli_query($mysqli, "SELECT * FROM fussnoten");
+if (!$res) {
+    die("Failed to run query: (" . $mysqli->errno . ") " . $mysqli->error);
+}
+while($row = mysqli_fetch_assoc($res)) {
+    $note = $row['note'];
+    echo "<p>{$note}</p>";
+}
 ?>
 
 
