@@ -71,16 +71,22 @@ header('Content-Type: text/html; charset=utf-8');
     <title>Stundenplan - <?php echo $schuljahrDescription; ?></title>
     <link rel="stylesheet" href="default.css">
     <link rel="icon" href="layout/image/favicon.ico">
+	<style type="text/css" media="screen">
+		table.db-table > tbody > tr.regular > td:nth-child(<?php echo date('N')+2; ?>) {
+			background-color: aliceblue;
+		}
+    </style>
 </head>
 <body>
 <?php
 
-echo "<h3>{$kindName}, {$schuljahrDescription}</h3>";
+echo "<h3>{$schuljahrDescription}</h3>";
 
 echo '<table cellpadding="0" cellspacing="0" class="db-table">';
-echo '<thead><tr><th>&nbsp;</th><th>&nbsp;</th><th>Montag</th><th>Dienstag</th><th>Mittwoch<th>Donnerstag</th><th>Freitag</th></tr></thead><tbody>';
+echo "\n<thead><tr><th>&nbsp;</th><th>&nbsp;</th><th>Montag</th><th>Dienstag</th><th>Mittwoch<th>Donnerstag</th><th>Freitag</th></tr></thead>\n<tbody>\n";
 
 $rowCount=0;
+
 while($row = mysqli_fetch_assoc($res)) {
     $stunde     = $row['stunde'];
     $montag     = $row['Montag'];
@@ -89,22 +95,18 @@ while($row = mysqli_fetch_assoc($res)) {
     $donnerstag = $row['Donnerstag'];
     $freitag    = $row['Freitag'];
 
-    echo '<tr>';
-
     if(strlen($montag) > 0 && is_null($dienstag) && is_null($mittwoch) && is_null($donnerstag) && is_null($freitag) ) {
         // Nur Montag is definiert, dann wird es eine durchgehende Zeile (z.B. Pause)
         echo "<tr class='intermediate'><td>&nbsp;</td><td>{$stunde}</td><td colspan='5'>{$montag}</td></tr>\n";
     } else {
         $rowCount++;
-        echo "<td>{$rowCount}</td><td>{$stunde}</td><td>{$montag}</td><td>{$dienstag}</td><td>{$mittwoch}</td><td>{$donnerstag}</td><td>{$freitag}</td>\n";
+        echo "<tr class='regular'><td>{$rowCount}</td><td>{$stunde}</td><td>{$montag}</td><td>{$dienstag}</td><td>{$mittwoch}</td><td>{$donnerstag}</td><td>{$freitag}</td></tr>\n";
     }
-
-    echo '</tr>';
 }
-echo '</tbody></table><br />';
+echo "</tbody>\n</table>\n<br />";
 
 // Footnotes
-$res = mysqli_query($mysqli, "SELECT * FROM fussnoten");
+$res = mysqli_query($mysqli, "SELECT * FROM fussnoten WHERE schuljahr_id={$schuljahr}");
 if (!$res) {
     die("Failed to run query: (" . $mysqli->errno . ") " . $mysqli->error);
 }
