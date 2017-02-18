@@ -12,7 +12,7 @@ require_once('config.inc.php');
 
 /* Parse input */
 $kidId = $_REQUEST['kind'] ?: 1;
-$schuljahr = $_REQUEST['schuljahr'] ?: 20162;
+$schuljahr = $_REQUEST['schuljahr'] ?: 20171;
 
 if(! is_numeric($kidId) && !is_null($kidId)) {
     die('Ungültiges kind');
