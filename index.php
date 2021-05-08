@@ -12,7 +12,7 @@ require_once('config.inc.php');
 
 /* Parse input */
 $kidId = $_REQUEST['kind'] ?: 1;
-$schuljahr = $_REQUEST['schuljahr'] ?: 20171;
+$schuljahr = $_REQUEST['schuljahr'] ?: -1;
 
 if(! is_numeric($kidId) && !is_null($kidId)) {
     die('Ungültiges kind');
@@ -31,6 +31,17 @@ $res = mysqli_query($mysqli, "SET NAMES utf8");
 if (!$res) {
     die( "Failed enable UTF-8: (" . $mysqli->errno . ") " . $mysqli->error );
 }
+
+/* get default schuljahr from database */
+if(is_numeric($schuljahr) && $schuljahr === -1) {
+    $res = mysqli_query($mysqli, "SELECT MAX(id) AS schuljahr FROM schuljahre");
+    if (!$res) {
+        die("Failed to run query: (" . $mysqli->errno . ") " . $mysqli->error);
+    }
+    $row = mysqli_fetch_assoc($res);
+    $schuljahr = $row['schuljahr'];
+}
+
 
 if(is_numeric($schuljahr)) {
     $res = mysqli_query($mysqli, "SELECT description FROM schuljahre WHERE id=" . $schuljahr);
@@ -62,18 +73,58 @@ if(is_numeric($kidId) && is_numeric($schuljahr)) {
     die('?!');
 }
 
+$currentDay = intval( date('N') );
+// skip Weekend
+if($currentDay > 5) {
+	$currentDay = 1;
+}
+
+$highlightElement = $currentDay + 2;
+// <700px: Show three days of week only
+$tableSelectorList = array();
+for ($i = 1; $i <= 5; $i++) {
+	if ($currentDay != $i && $currentDay != $i-1 && $currentDay != $i+1) {
+		$hideElement = $i + 2;
+		$tableSelectorList[] = "table.db-table > tbody > tr.regular > td:nth-child($hideElement)";
+		$tableSelectorList[] = "table > thead > tr > th:nth-child($hideElement)";
+	}
+}
+// <500px: Show current day of week only
+$tableSelectorListTiny = array();
+for ($i = 1; $i <= 5; $i++) {
+	if ($currentDay == $i-1 || $currentDay == $i+1) {
+		$hideElement = $i + 2;
+		$tableSelectorListTiny[] = "table.db-table > tbody > tr.regular > td:nth-child($hideElement)";
+		$tableSelectorListTiny[] = "table > thead > tr > th:nth-child($hideElement)";
+	}
+}
+
 header('Content-Type: text/html; charset=utf-8');
 
 ?>
 <html>
 <head>
-    <meta name="viewport" content="width=800">
-    <title>Stundenplan - <?php echo $schuljahrDescription; ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Stundenplan - <?php echo $schuljahrDescription; ?> - <?php echo $kidId==1?"Das eine Kind":"Das andere Kind"; ?></title>
     <link rel="stylesheet" href="default.css">
     <link rel="icon" href="layout/image/favicon.ico">
 	<style type="text/css" media="screen">
-		table.db-table > tbody > tr.regular > td:nth-child(<?php echo date('N')+2; ?>) {
+		table.db-table > tbody > tr.regular > td:nth-child(<?php echo $highlightElement; ?>) {
 			background-color: aliceblue;
+		}
+		/* hide other days */
+		@media only screen and (max-width: 700px) {
+			<?php echo implode(", ", $tableSelectorList); ?>
+			{
+				display: none;
+			}
+		}
+		/* hide other days */
+		@media only screen and (max-width: 500px) {
+			<?php echo implode(", ", $tableSelectorListTiny); ?>
+			{
+				display: none;
+			}
 		}
     </style>
 </head>
@@ -116,7 +167,11 @@ while($row = mysqli_fetch_assoc($res)) {
 }
 ?>
 
-
+<p>
+<a href="?kind=1">Das eine Kind</a>
+|
+<a href="?kind=2">Das andere Kind</a>
+</p<
 </body>
 
 </html>
