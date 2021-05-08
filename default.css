@@ -1,7 +1,9 @@
 table.db-table 		{
     border-right:1px solid #ccc;
     border-bottom:1px solid #ccc;
-    width: 785px;
+    width: 100%;
+	max-width: 795px;
+	min-width: 320px;
 }
 table.db-table th, table.db-table tr.intermediate	{
     background:#eee;
@@ -14,3 +16,4 @@ table.db-table td	{
     border-top:1px solid #ccc;
     text-align: center;
 }
+
